@@ -4,7 +4,7 @@
         <div class="w-full min-h-[200px]  flex flex-col justify-between relative">
             <img :src="animeData?.data?.[getRandomInt(0,animeData?.data.length)]?.images?.jpg?.large_image_url" alt="" class="  dark:opacity-50 absolute w-full h-full object-cover">
                 <div class="right-2 top-2 absolute">
-                    <Button label=" Theme: DarkMode" @click="()=>{
+                    <Button :label=" `Theme: ${darkMode?'Dark':'Light'}`" @click="()=>{
                         darkMode = !darkMode;
                         onThemeChanged && onThemeChanged(darkMode);
                     }"></Button>
@@ -13,7 +13,7 @@
             <div class="w-full  "></div>
             <div class="  flex justify-between items-star md:items-center flex-col md:flex-row bg-gradient-to-t   dark:from-luk-100  w-full h-20 bg-whit  px-2 md:px-10 z-10 pb-10">
                 <p class="text-4xl font-bold mb-2 dark:text-gray-200  text-gray-700 bg-white dark:bg-transparent p-2 rounded-md">
-                    My video torrents
+                    Hivy Space
                 </p>
                 <div class="flex bg-white md:bg-transparent dark:bg-transparent px-10 ">
                     <Dropdown label="Sort by -" :items="animeThemes" class="w-50 dark:bg-luk-200 bg-white  rounded-md">
