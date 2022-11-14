@@ -17,7 +17,7 @@ import Animes from './pages/Animes.vue';
 export default {
   data:function(){
     return {
-      theme:'',
+      theme:'dark',
     }
   }
     
