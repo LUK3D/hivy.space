@@ -47,7 +47,6 @@ onMounted(() => {
                 <div class="flex bg-white md:bg-transparent dark:bg-transparent px-10 ">
                     <Dropdown label="Sort by -" :items="animeThemes" class="w-50 dark:bg-luk-200 bg-white  rounded-md">
                     </Dropdown>
-                    <GoogleLogin :callback="callback"  />
 
                     <Button type="primary" label="Add Video" class="ml-2 text-xs w-40 md:w-auto">
                         <template #leftIcon >
@@ -94,6 +93,7 @@ onMounted(() => {
                 <div class="p-5 flex flex-col w-full bg-white dark:bg-luk-400 rounded-lg justify-center items-center text-center ">
                     <p class="text-3xl">Login</p>
                     <p class="my-2 text-sm">To unlock all the awesome feature form the community</p>
+                    <GoogleLogin :callback="callback"  />
 
                     <Button  class="dark:text-gray-200 border-1 bg-luk-600 bg-opacity-25 dark:border-luk-600 py-5" label="Login with your Google account">
                        <template #leftIcon>
