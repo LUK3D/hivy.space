@@ -50,13 +50,29 @@
         </div>
 
         
-        <div class="w-full p-2 md:p-10 grid md:grid-cols-3 lg:grid-cols-4 gap-5 grid-cols-1 sm:grid-cols-2 mt-5">
-            <AnimeCard v-for="(anime, index) in animeData.data" :key="index" :anime="anime" :onShowDetails="()=>{
-                        showDetails = true;
-                        selectedAnime = anime;
-                        getCharacters(anime.mal_id!);
-            }"></AnimeCard>
+        <div class="w-full flex">
+            <div class="w-full p-2 md:p-10 grid md:grid-cols-3 lg:grid-cols-3 gap-4 grid-cols-1 sm:grid-cols-2 ">
+                <AnimeCard v-for="(anime, index) in animeData.data" :key="index" :anime="anime" :onShowDetails="()=>{
+                            showDetails = true;
+                            selectedAnime = anime;
+                            getCharacters(anime.mal_id!);
+                }"></AnimeCard>
 
+            </div>
+            <div class="w-2/6 flex flex-col pr-2">
+                <div class="p-5 flex flex-col w-full bg-white dark:bg-luk-400 rounded-lg justify-center items-center text-center ">
+                    <p class="text-3xl">Login</p>
+                    <p class="my-2 text-sm">To unlock all the awesome feature form the community</p>
+
+                    <Button class="dark:text-gray-200 border-1 bg-luk-600 bg-opacity-25 dark:border-luk-600 py-5" label="Login with your Google account">
+                       <template #leftIcon>
+                        <img class="w-10 h-10 mr-2 p-1" src="../assets/icons/gicon.svg" alt="">
+                       </template>
+                    </Button>
+                    <p class="my-5 text-xs ">To unlock all the awesome feature form the community</p>
+
+                </div>
+            </div>
         </div>
 
 
@@ -184,6 +200,7 @@ export default {
             }
         }  
         })
+        console.log("KEY HERE:",import.meta.env.API_KEY);
     },
     computed:{
         
