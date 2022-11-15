@@ -6,7 +6,7 @@ This is the start of something BIG. We will create the best place to find new fr
 ## 🚀Contribuition
 You can help the project by giving a star or contribuiting to the source code by adding new features or fixing some bug or just add more information o this Readme file.
 
-![Hivy Space Screen shot](../../../../../C:/_projects/vite/vue/anime_hub/screenshots/scshoot01.png)
+![Hivy Space Screen shot](./screenshots/scshoot01.png)
 
 
 The project uses:
