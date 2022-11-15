@@ -51,45 +51,11 @@
 
         
         <div class="w-full p-2 md:p-10 grid md:grid-cols-3 lg:grid-cols-4 gap-5 grid-cols-1 sm:grid-cols-2 mt-5">
-            <div v-for="(anime, index) in animeData.data" :key="index" class="h-[400px] dark:bg-luk-400 bg-white col-span-1 rounded-lg  flex flex-col">
-                <div class="w-full flex items-center justify-between px-5 py-2">
-                    <Checkbox ></Checkbox>
-                    <div class="flex items-center text-sm">
-                        <p>Views: 10k</p>
-                        <EyeIcon class="w-5 h-5 ml-2"></EyeIcon>
-                    </div>
-                </div>
-               
-
-                <img class=" mt-2 h-full object-cover overflow-hidden " :src="anime.images?.jpg?.image_url" alt="">
-                <div class="w-full py-1 mt-2 border-t-2 dark:border-luk-500 px-5 py-2 flex flex-col">
-                    <div class="flex items-center justify-between border-b pb-2 dark:border-luk-500">
-                        <div class="flex ">
-                            <p class="text-xs">Review 🥰💖 {{anime.scored_by}}</p>
-                        </div>
-                        <div class="flex items-center">
-                            <StarIcon class="w-5 h-5 text-yellow-500"></StarIcon>
-                            <p class="text-xs">{{anime.score}}</p>
-                        </div>
-                        <div class="flex items-center">
-                            <p class="text-xs">{{anime.type}}</p>
-                        </div>
-                    </div>
-               
-                    <p class="py-2 text-lg dark:text-gray-300 font-[500] text-sm ">{{anime.title}}</p>
-                    <p class=" dark:text-gray-300 font-[500] text-sm">{{anime.title_japanese}}</p>
-                    <Button @click="()=>{
+            <AnimeCard v-for="(anime, index) in animeData.data" :key="index" :anime="anime" :onShowDetails="()=>{
                         showDetails = true;
                         selectedAnime = anime;
                         getCharacters(anime.mal_id!);
-                    }" label="View Details" class="mt-2 w-full text-luk-600">
-                        <template #leftIcon>
-                                <EyeIcon class="w-5 h-5 mr-2"></EyeIcon>
-                        </template>
-                    </Button>
-                </div>
-            </div>
-            
+            }"></AnimeCard>
 
         </div>
 
@@ -115,6 +81,7 @@ import  axios from 'axios';
 
 import { IAnime, IAnimeResult } from '../types';
 import AnimeDetails from '../components/AnimeDetails.vue';
+import AnimeCard from '../components/AnimeCard.vue';
 
 
 
@@ -235,7 +202,8 @@ export default {
     CubeIcon,
     EyeIcon,
     StarIcon,
-    AnimeDetails
+    AnimeDetails,
+    AnimeCard
 }
    
     
