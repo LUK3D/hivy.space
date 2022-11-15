@@ -94,10 +94,10 @@
         </div>
             
 
-        <div v-show="showDetails" class="fixed z-10 w-full h-full bg-luk-500 bg-opacity-95 flex flex-col p-10 overflow-y-auto text-gray-400">
-            <div class=" w-full grid grid-cols-12 gap-4">
-                <div class="col-span-3 py-5">
-                    <img :src="selectedAnime.images?.jpg?.large_image_url" alt="">
+        <div v-show="showDetails" class="fixed z-10 w-full h-full bg-luk-500 bg-opacity-95 flex flex-col md:p-10 overflow-y-auto text-gray-400">
+            <div class=" w-full grid grid-cols-1 md:grid-cols-12 md:gap-4">
+                <div class="col-span-3 py-5 w-full">
+                    <img :src="selectedAnime.images?.jpg?.large_image_url" class="w-full">
                 </div>
                 <div class="col-span-9 flex flex-col bg-luk-500 p-5 rounded-md shadow-2xl">
                     <p class="text-4xl text-white">{{selectedAnime.title}}</p>
@@ -108,7 +108,7 @@
                             </svg>
                             <p class="absolute text-white font-bold mt-2">{{selectedAnime.score}}</p>
                         </div>
-                        <div class="flex pt-2 pl-5">
+                        <div class="flex flex-wrap pt-2 pl-5">
                             <p class="font-bold">Genre:</p>
                             <p class="mx-1" v-for="(theme, index) in selectedAnime.themes" :key="index">{{theme.name}}</p>
                         </div>
@@ -135,7 +135,7 @@
                         {{paragraph}}
                     </p>
 
-                    <div class="w-full p-5 bg-luk-500 mt-5 rounded-md grid grid-cols-5 gap-2">
+                    <div class="w-full p-5 bg-luk-500 mt-5 rounded-md grid md:grid-cols-2 lg:grid-cols-5 gap-2">
                         <div v-for="(character) in selectedAnime.characters?.data" :key="character.character?.name" class="flex flex-col p-4 shadow-lg">
                             <img :src="character.character?.images?.jpg?.image_url" class="rounded-md">
                             <p class="mt-2">{{character.character?.name}} - {{character.role}}</p>
@@ -174,7 +174,7 @@ export default {
     data:function(){ 
 
         return new class {
-            darkMode:boolean = false;
+            darkMode:boolean = true;
 
             animeThemes:Array<Object> =[
                 {label:"Manga"},
