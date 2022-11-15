@@ -1,5 +1,8 @@
 
 <script lang="ts" setup>
+import { onMounted } from "vue"
+import { googleOneTap } from "vue3-google-login"
+
 
 const Vue3GoogleOauth = inject('VueGoogleOauth');
 const callback = (response:any) => {
@@ -7,6 +10,17 @@ const callback = (response:any) => {
   // his Google account from the popup
   console.log("Handle the response", response)
 }
+
+onMounted(() => {
+  googleOneTap()
+    .then((response) => {
+      // This promise is resolved when user selects an account from the the One Tap prompt
+      console.log("Handle the response", response)
+    })
+    .catch((error) => {
+      console.log("Handle the error", error)
+    })
+})
 
 </script>
 <template >
@@ -29,7 +43,7 @@ const callback = (response:any) => {
                 <div class="flex bg-white md:bg-transparent dark:bg-transparent px-10 ">
                     <Dropdown label="Sort by -" :items="animeThemes" class="w-50 dark:bg-luk-200 bg-white  rounded-md">
                     </Dropdown>
-                    <GoogleLogin :callback="callback"/>
+                    <GoogleLogin :callback="callback"  />
 
                     <Button type="primary" label="Add Video" class="ml-2 text-xs w-40 md:w-auto">
                         <template #leftIcon >
