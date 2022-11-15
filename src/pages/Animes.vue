@@ -202,7 +202,6 @@ export default {
         })
 
         console.log("KEY HERE-1:",import.meta.env.VITE_GOOGLE_API_KEY);
-        console.log("KEY HERE-2:",import.meta.env.VITE_APP_GOOGLE_API_KEY);
     },
     computed:{
         
