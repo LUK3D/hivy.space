@@ -40,6 +40,7 @@
 </template>
 <script lang="ts">
 import Button from '../components/Button.vue'
+import Checkbox from '../components/Checkbox.vue'
 import { EyeIcon,  StarIcon} from "@heroicons/vue/24/solid"
 
 export default {
@@ -57,7 +58,7 @@ export default {
      components:{
         EyeIcon,
         StarIcon,
-        
+        Checkbox,
     Button,
 }
 }

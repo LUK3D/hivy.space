@@ -1,3 +1,14 @@
+
+<script lang="ts" setup>
+
+const Vue3GoogleOauth = inject('VueGoogleOauth');
+const callback = (response:any) => {
+  // This callback will be triggered when the user selects or login to
+  // his Google account from the popup
+  console.log("Handle the response", response)
+}
+
+</script>
 <template >
     <div class="relative w-full h-full dark:bg-luk-200 bg-gray-200 flex flex-col dark:text-luk-700 text-gray-700 overflow-y-auto" id="animePageList">
        
@@ -18,6 +29,8 @@
                 <div class="flex bg-white md:bg-transparent dark:bg-transparent px-10 ">
                     <Dropdown label="Sort by -" :items="animeThemes" class="w-50 dark:bg-luk-200 bg-white  rounded-md">
                     </Dropdown>
+                    <GoogleLogin :callback="callback"/>
+
                     <Button type="primary" label="Add Video" class="ml-2 text-xs w-40 md:w-auto">
                         <template #leftIcon >
                             <PlusIcon class="w-6 h-6"></PlusIcon>
@@ -64,7 +77,7 @@
                     <p class="text-3xl">Login</p>
                     <p class="my-2 text-sm">To unlock all the awesome feature form the community</p>
 
-                    <Button class="dark:text-gray-200 border-1 bg-luk-600 bg-opacity-25 dark:border-luk-600 py-5" label="Login with your Google account">
+                    <Button  class="dark:text-gray-200 border-1 bg-luk-600 bg-opacity-25 dark:border-luk-600 py-5" label="Login with your Google account">
                        <template #leftIcon>
                         <img class="w-10 h-10 mr-2 p-1" src="../assets/icons/gicon.svg" alt="">
                        </template>
@@ -98,6 +111,7 @@ import  axios from 'axios';
 import { IAnime, IAnimeResult } from '../types';
 import AnimeDetails from '../components/AnimeDetails.vue';
 import AnimeCard from '../components/AnimeCard.vue';
+import { inject } from 'vue';
 
 
 
@@ -185,8 +199,11 @@ export default {
             .finally(function () {
                 // always executed
             });   
-        }
+        },
+
+       
     },
+   
     mounted(){
         const ctx = this;
         ctx.getAnimeData({});
@@ -201,7 +218,7 @@ export default {
         }  
         })
 
-        console.log("KEY HERE-1:",import.meta.env.VITE_GOOGLE_API_KEY);
+       
     },
     computed:{
         

@@ -700,6 +700,16 @@ vue-tsc@^1.0.9:
     "@volar/vue-language-core" "1.0.9"
     "@volar/vue-typescript" "1.0.9"
 
+vue3-google-login@^2.0.12:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/vue3-google-login/-/vue3-google-login-2.0.12.tgz#b235c10d83109d04fd67057336fc15d77bb14664"
+  integrity sha512-gKc9yS6NDgU2JLKXZGYu9NQzIBd/CTXFFo1IU8nUZsP5QFjRuylSDZQ7tLUeueL+SYHJiE/FzxB5bQlcTdQ7Wg==
+
+vue3-google-oauth2@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/vue3-google-oauth2/-/vue3-google-oauth2-1.0.6.tgz#bde2e17a565e83979d54f83e27bac8e7ced03b1a"
+  integrity sha512-ebUW3V1jejImw2z9nggjczPj4jUnZArNq+kgTdLdGuf6k/zQDDCeGTLmTUiy5gSXMbzVz9PQWiVEj8eX6y/I0Q==
+
 vue@^3.2.41:
   version "3.2.45"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.2.45.tgz#94a116784447eb7dbd892167784619fef379b3c8"
