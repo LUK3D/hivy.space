@@ -200,10 +200,7 @@ export default {
             }
         }  
         })
-        console.log("KEY HERE:",import.meta.env.VUE_APP_API_KEY);
-        console.log("KEY HERE:",import.meta.env.APP_API_KEY);
-        console.log("KEY HERE:",import.meta.env.VITE_API_KEY);
-        console.log("KEY HERE:",import.meta.env.VITE_APP_API_KEY);
+        console.log("KEY HERE:",import.meta.env.VITE_GOOGLE_API_KEY);
     },
     computed:{
         
