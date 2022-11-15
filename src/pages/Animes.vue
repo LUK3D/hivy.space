@@ -1,11 +1,13 @@
 
 <script lang="ts" setup>
 import { onMounted } from "vue"
-import { googleOneTap } from "vue3-google-login"
+import { googleOneTap,decodeCredential  } from "vue3-google-login"
 
 
-const Vue3GoogleOauth = inject('VueGoogleOauth');
 const callback = (response:any) => {
+  const userData = decodeCredential(response.credential)
+  console.log("Handle the userData", userData)
+
   // This callback will be triggered when the user selects or login to
   // his Google account from the popup
   console.log("Handle the response", response)
@@ -14,7 +16,9 @@ const callback = (response:any) => {
 onMounted(() => {
   googleOneTap()
     .then((response) => {
-      // This promise is resolved when user selects an account from the the One Tap prompt
+    const userData = decodeCredential(response.credential)
+    console.log("Handle the userData", userData)
+    // This promise is resolved when user selects an account from the the One Tap prompt
       console.log("Handle the response", response)
     })
     .catch((error) => {
