@@ -16,8 +16,8 @@ const callback = (response:any) => {
 onMounted(() => {
   googleOneTap()
     .then((response) => {
-    const userData = decodeCredential(response.credential)
-    console.log("Handle the userData", userData)
+    // const userData = decodeCredential(response.credential)
+    // console.log("Handle the userData", userData)
     // This promise is resolved when user selects an account from the the One Tap prompt
       console.log("Handle the response", response)
     })
