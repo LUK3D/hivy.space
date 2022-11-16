@@ -1,30 +1,11 @@
 
 <script lang="ts" setup>
-import { onMounted } from "vue"
-import { googleOneTap,decodeCredential  } from "vue3-google-login"
+import { onMounted, watch } from "vue"
+import { googleOneTap,decodeCredential,googleLogout   } from "vue3-google-login"
 
 
-const callback = (response:any) => {
-  const userData = decodeCredential(response.credential)
-  console.log("Handle the userData", userData)
 
-  // This callback will be triggered when the user selects or login to
-  // his Google account from the popup
-  console.log("Handle the response", response)
-}
 
-onMounted(() => {
-  googleOneTap()
-    .then((response) => {
-    // const userData = decodeCredential(response.credential)
-    // console.log("Handle the userData", userData)
-    // This promise is resolved when user selects an account from the the One Tap prompt
-      console.log("Handle the response", response)
-    })
-    .catch((error) => {
-      console.log("Handle the error", error)
-    })
-})
 
 </script>
 <template >
@@ -91,16 +72,26 @@ onMounted(() => {
             </div>
             <div class="w-2/6 flex flex-col pr-2">
                 <div class="p-5 flex flex-col w-full bg-white dark:bg-luk-400 rounded-lg justify-center items-center text-center ">
+                  <div v-if="!loggedUser.email_verified" class="w-full flex flex-col justify-center items-center">
                     <p class="text-3xl">Login</p>
                     <p class="my-2 text-sm">To unlock all the awesome feature form the community</p>
-                    <GoogleLogin :callback="callback"  />
-
-                    <Button  class="dark:text-gray-200 border-1 bg-luk-600 bg-opacity-25 dark:border-luk-600 py-5" label="Login with your Google account">
-                       <template #leftIcon>
-                        <img class="w-10 h-10 mr-2 p-1" src="../assets/icons/gicon.svg" alt="">
-                       </template>
-                    </Button>
+                        <GoogleLogin   :callback="onLoginCallback" prompt auto-login  />
                     <p class="my-5 text-xs ">To unlock all the awesome feature form the community</p>
+
+                  </div>
+                  <div v-else class="w-full flex flex-col justify-center items-center">
+                    <div>
+                        <img :src="loggedUser.picture" alt="" class="rounded-full w-40 h-40 object-cover">
+                    </div>
+                    <p class="text-3xl my-2">{{loggedUser.username??loggedUser.name}}</p>
+                    <p class="my-2 text-sm">Welcome to hivy space!</p>
+                       
+                    <Button type="primary" @click="()=>{
+                        googleLogout();
+                        loggedUser = {};
+                    }" label="Logout" ></Button>
+
+                  </div>
 
                 </div>
             </div>
@@ -110,6 +101,71 @@ onMounted(() => {
         <AnimeDetails :showDetails="showDetails" :selectedAnime="selectedAnime" :darkMode="darkMode" :onCloseAnimeDetails="()=>{
             showDetails = false;
         }"></AnimeDetails>
+        
+
+        <Dialog :open="showWelcome" :onClose="()=>{
+            showWelcome = !showWelcome;
+        }">
+            <template #content>
+                <div class="w-2/4 h-[90vh] bg-luk-500  rounded-lg p-5 flex flex-col justify-items text-center">
+
+                <div v-if="createUserStep == 0"  class="w-full h-[90%] flex flex-col">
+                    <div class="w-full py-2 border-b pb-5 border-luk-200">
+                        <p class=" lowercase text-2xl">Hello {{loggedUser.name?.normalize()}} welcome to Hivy Space!</p>
+                        <p class=" lowercase text-sn">You are about to start a new Experience.</p>
+                        <p class=" lowercase  ">To keep up with other users, selec a picture for your avatar 😁</p>
+                    </div>
+                    <div  class="w-full grid grid-cols-5 gap-2 py-4 h-full  overflow-y-auto overflow-x-hidden">
+                        <button @click="()=>{
+                            loggedUser.picture = avatarImage;
+                        }" v-for="(avatarImage, index) in animeAvatars" :key="index" class="transform transition-transform hover:scale-125 hover:z-10 col-span-1 h-32 bg-luk-300 rounded-lg overflow-hidden">
+                            <img class="w-full h-full object-cover" :src="avatarImage" alt="">
+                        </button>
+                        
+                        
+                    </div>
+                
+                </div>
+
+                <div v-if="createUserStep == 1" class="w-full h-full flex flex-col">
+                    <div class="w-full py-2 border-b pb-5 border-luk-200">
+                        <p class="  text-sn">We care about your privacy. <br> Give yourself a cool username so peaple can know ho they are talking with.</p>
+                        <p class=" text-sm  ">This name will be used as your handle on Hivy Space</p>
+                    </div>
+
+                    <div class="w-full h-full flex flex-col justify-center items-center">
+
+                        <div class="p-1 bg-luk-400 rounded-lg w-2/4 flex items-center">
+                          <p class="text-2xl text-luk-600">@</p>  <input v-model="loggedUser.username" type="text" placeholder="Enter your Username" class="font-bold w-full bg-transparent outline-none pl-0 p-2">
+                        </div>
+                        <Button class="w-2/5 mt-10 py-1 bg-opacity-50  py-5 border-2 dark:border-luk-600 border-luk-600" type="primary" label="Apply">
+                            <template #leftIcon>
+                                    <CheckIcon class="w-6 h-6"></CheckIcon>
+                            </template>
+                        </Button>
+                    </div>
+                </div>
+                
+
+                 <div class="flex w-full pt-5 justify-between">
+                  <div>
+                    <Button @click="()=>{createUserStep--;}" type="primary" label="Back">
+                        <template #rightIcon>
+                                <ArrowRightCircleIcon class="w-6 h-6 transform rotate-180"></ArrowRightCircleIcon>
+                        </template>
+                    </Button>
+                  </div>
+                   <div>
+                    <Button @click="()=>{createUserStep++;}" type="primary" label="Next">
+                        <template #rightIcon>
+                                <ArrowRightCircleIcon class="w-6 h-6"></ArrowRightCircleIcon>
+                        </template>
+                    </Button>
+                   </div>
+                 </div>
+                </div>
+            </template>
+        </Dialog>
             
 
         
@@ -120,13 +176,14 @@ onMounted(() => {
 <script lang="ts">
 
 import Dropdown from '../components/Dropdown.vue'
+import Dialog from '../components/Dialog.vue'
 import Button from '../components/Button.vue'
 import Checkbox from '../components/Checkbox.vue'
-import {ChevronDownIcon, CubeIcon, EyeIcon, PlusIcon, QueueListIcon, StarIcon} from "@heroicons/vue/24/solid"
+import {ChevronDownIcon, CubeIcon, EyeIcon, PlusIcon, QueueListIcon, StarIcon, ArrowRightCircleIcon, CheckIcon} from "@heroicons/vue/24/solid"
 
 import  axios from 'axios';
 
-import { IAnime, IAnimeResult } from '../types';
+import { IAnime, IAnimeResult, IUser } from '../types';
 import AnimeDetails from '../components/AnimeDetails.vue';
 import AnimeCard from '../components/AnimeCard.vue';
 import { inject } from 'vue';
@@ -137,6 +194,9 @@ export default {
     data:function(){ 
 
         return new class {
+            createUserStep:number = 0;
+            showWelcome:boolean = false;
+            loggedUser:IUser = {};
             darkMode:boolean = true;
             animeThemes:Array<Object> =[
                 {label:"Manga"},
@@ -145,12 +205,49 @@ export default {
                 {label:"Comic"},
             ];
 
+            animeAvatars:Array<string>=[
+                'https://avatarfiles.alphacoders.com/108/thumb-108886.gif',
+                'https://avatarfiles.alphacoders.com/715/thumb-71560.jpg',
+                'https://avatarfiles.alphacoders.com/752/thumb-75205.png',
+                'https://avatarfiles.alphacoders.com/260/thumb-260.jpg',
+                'https://avatarfiles.alphacoders.com/893/thumb-89303.gif',
+                'https://avatarfiles.alphacoders.com/896/thumb-89615.png',
+                'https://avatarfiles.alphacoders.com/827/thumb-82734.jpg',
+                'https://avatarfiles.alphacoders.com/161/thumb-161888.png',
+                'https://avatarfiles.alphacoders.com/321/thumb-32154.gif',
+                'https://avatarfiles.alphacoders.com/108/thumb-108839.gif',
+                'https://avatarfiles.alphacoders.com/967/thumb-96757.png',
+                'https://avatarfiles.alphacoders.com/849/thumb-84930.png',
+                'https://avatarfiles.alphacoders.com/320/thumb-32018.png',
+                'https://avatarfiles.alphacoders.com/106/thumb-10677.gif',
+                'https://avatarfiles.alphacoders.com/108/thumb-108672.gif',
+                'https://avatarfiles.alphacoders.com/970/thumb-97021.png',
+                'https://avatarfiles.alphacoders.com/905/thumb-90595.gif',
+                'https://avatarfiles.alphacoders.com/910/thumb-91042.gif',
+                'https://avatarfiles.alphacoders.com/477/thumb-47.jpg',
+                'https://avatarfiles.alphacoders.com/982/thumb-9825.jpg',
+                'https://avatarfiles.alphacoders.com/782/thumb-78200.png',
+                'https://avatarfiles.alphacoders.com/108/thumb-108917.png',
+                'https://avatarfiles.alphacoders.com/134/thumb-13472.gif',
+                'https://avatarfiles.alphacoders.com/152/thumb-152197.png',
+                'https://avatarfiles.alphacoders.com/162/thumb-162023.png',
+                'https://avatarfiles.alphacoders.com/907/thumb-90762.png',
+                'https://avatarfiles.alphacoders.com/837/thumb-83722.jpg',
+                'https://avatarfiles.alphacoders.com/837/thumb-83705.png',
+                'https://avatarfiles.alphacoders.com/174/thumb-174875.png',
+                'https://avatarfiles.alphacoders.com/123/thumb-123211.png',
+                'https://avatarfiles.alphacoders.com/946/thumb-94610.jpg',
+                'https://avatarfiles.alphacoders.com/969/thumb-96992.gif',
+                'https://avatarfiles.alphacoders.com/740/thumb-74085.png'
+            ];
+
             selectedAnime:IAnime = {};
             showDetails:boolean = false;
 
             animeData:IAnimeResult = {};
         }();
     },
+   
     props:{
         onThemeChanged:{
             type:Function
@@ -218,12 +315,42 @@ export default {
                 // always executed
             });   
         },
+        onLoginCallback: function (response:any) {
+
+            console.log(response);
+            const userData = decodeCredential(response.credential)
+            console.log("Handle the userData", userData)
+
+            this.loggedUser = userData;
+            
+            this.showWelcome = true;
+            // //@ts-ignore
+            // window.user = userData;
+
+        }
 
        
     },
    
     mounted(){
         const ctx = this;
+
+
+
+
+
+    setTimeout(() => {
+            googleOneTap()
+            .then((response) => {
+                ctx.onLoginCallback(response)
+            })
+            .catch((error) => {
+                console.log("Handle the error", error)
+            })
+        
+    }, 500);
+
+
         ctx.getAnimeData({});
  
         const myDiv = document.getElementById('animePageList')  
@@ -256,7 +383,10 @@ export default {
     EyeIcon,
     StarIcon,
     AnimeDetails,
-    AnimeCard
+    AnimeCard,
+    Dialog,
+    ArrowRightCircleIcon,
+    CheckIcon
 }
    
     
