@@ -88,7 +88,6 @@ import { googleOneTap,decodeCredential,googleLogout   } from "vue3-google-login"
                     <p class="text-3xl">Login</p>
                     <p class="my-2 text-sm">To unlock all the awesome feature form the community</p>
                         <GoogleLogin   :callback="onLoginCallback" prompt auto-login  />
-                    <p class="my-5 text-xs ">To unlock all the awesome feature form the community</p>
 
                   </div>
                   <div v-else class="w-full flex flex-col justify-center items-center">
