@@ -1,30 +1,11 @@
 
 <script lang="ts" setup>
-import { onMounted } from "vue"
-import { googleOneTap,decodeCredential  } from "vue3-google-login"
+import { onMounted, watch } from "vue"
+import { googleOneTap,decodeCredential,googleLogout   } from "vue3-google-login"
 
 
-const callback = (response:any) => {
-  const userData = decodeCredential(response.credential)
-  console.log("Handle the userData", userData)
 
-  // This callback will be triggered when the user selects or login to
-  // his Google account from the popup
-  console.log("Handle the response", response)
-}
 
-onMounted(() => {
-  googleOneTap()
-    .then((response) => {
-    const userData = decodeCredential(response.credential)
-    console.log("Handle the userData", userData)
-    // This promise is resolved when user selects an account from the the One Tap prompt
-      console.log("Handle the response", response)
-    })
-    .catch((error) => {
-      console.log("Handle the error", error)
-    })
-})
 
 </script>
 <template >
@@ -80,7 +61,7 @@ onMounted(() => {
         </div>
 
         
-        <div class="w-full flex">
+        <div class="w-full flex flex-col-reverse lg:flex-row">
             <div class="w-full p-2 md:p-10 grid md:grid-cols-3 lg:grid-cols-3 gap-4 grid-cols-1 sm:grid-cols-2 ">
                 <AnimeCard v-for="(anime, index) in animeData.data" :key="index" :anime="anime" :onShowDetails="()=>{
                             showDetails = true;
@@ -89,18 +70,42 @@ onMounted(() => {
                 }"></AnimeCard>
 
             </div>
-            <div class="w-2/6 flex flex-col pr-2">
-                <div class="p-5 flex flex-col w-full bg-white dark:bg-luk-400 rounded-lg justify-center items-center text-center ">
+            <div class="w-full pl-2 md:p-0 pt-8 md:pt-0 lg:w-2/6 flex md:flex-row lg:flex-col flex-col pr-2">
+                <div class="md:mx-2 lg:mx-0 p-5 md:mb-2 flex flex-col w-full bg-white dark:bg-luk-400 rounded-lg justify-center items-center text-center ">
+                    
+                    <div class="dark:text-white text-luk-500">
+                        <svg  height="62" aria-hidden="true" viewBox="0 0 16 16" version="1.1" width="62" data-view-component="true" class=" fill-current mb-2">
+                            <path  fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                        </svg>
+                    </div>
+                    <p>This is an open source project.
+                        You can find the source code on <a class="text-luk-600" target="_blank" href="https://www.github.com/luk3d/hivy.space">Github</a>
+                    </p>
+
+                </div>
+                <div class="md:m-2 lg:m-0 p-5 flex flex-col w-full bg-white dark:bg-luk-400 rounded-lg justify-center items-center text-center ">
+                  <div v-if="!loggedUser.email_verified" class="w-full flex flex-col justify-center items-center">
                     <p class="text-3xl">Login</p>
                     <p class="my-2 text-sm">To unlock all the awesome feature form the community</p>
-                    <GoogleLogin :callback="callback"  />
-
-                    <Button  class="dark:text-gray-200 border-1 bg-luk-600 bg-opacity-25 dark:border-luk-600 py-5" label="Login with your Google account">
-                       <template #leftIcon>
-                        <img class="w-10 h-10 mr-2 p-1" src="../assets/icons/gicon.svg" alt="">
-                       </template>
-                    </Button>
+                        <GoogleLogin   :callback="onLoginCallback" prompt auto-login  />
                     <p class="my-5 text-xs ">To unlock all the awesome feature form the community</p>
+
+                  </div>
+                  <div v-else class="w-full flex flex-col justify-center items-center">
+                    <div>
+                        <img :src="loggedUser.picture" alt="" class="rounded-full w-40 h-40 object-cover">
+                    </div>
+                    <p class="text-3xl my-2">@{{loggedUser.username??loggedUser.name}}</p>
+                    <p class="my-2 text-sm">Welcome to hivy space!</p>
+                    <p class="my-2 text-sm w-full p-2 bg-gray-200 dark:bg-luk-200 rounded-md">{{loggedUser.tagline}}</p>
+                       
+                    <Button type="primary" @click="()=>{
+                        googleLogout();
+                        loggedUser = {};
+                        createUserStep = 0;
+                    }" label="Logout" ></Button>
+
+                  </div>
 
                 </div>
             </div>
@@ -110,6 +115,82 @@ onMounted(() => {
         <AnimeDetails :showDetails="showDetails" :selectedAnime="selectedAnime" :darkMode="darkMode" :onCloseAnimeDetails="()=>{
             showDetails = false;
         }"></AnimeDetails>
+        
+
+        <Dialog :open="showWelcome" :onClose="()=>{
+            showWelcome = !showWelcome;
+        }">
+            <template #content>
+                <div class="w-full md:w-3/4 lg:w-2/4 h-[90vh] bg-luk-500  rounded-lg p-5 flex flex-col justify-items text-center">
+
+                <div v-if="createUserStep == 0"  class="w-full h-[90%] flex flex-col">
+                    <div class="w-full py-2 border-b pb-5 border-luk-200">
+                        <p class=" lowercase text-2xl">Hello {{loggedUser.name?.normalize()}} welcome to Hivy Space!</p>
+                        <p class=" lowercase text-sn">You are about to start a new Experience.</p>
+                        <p class=" lowercase  ">To keep up with other users, selec a picture for your avatar 😁</p>
+                    </div>
+                    <div  class="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 py-4 h-full  overflow-y-auto overflow-x-hidden">
+                        <button @click="()=>{
+                            loggedUser.picture = avatarImage;
+                        }" v-for="(avatarImage, index) in animeAvatars" :key="index" class="transform transition-transform hover:scale-125 hover:z-10 col-span-1 h-32 bg-luk-300 rounded-lg overflow-hidden">
+                            <img class="w-full h-full object-cover" :src="avatarImage" alt="">
+                        </button>
+                        
+                        
+                    </div>
+                
+                </div>
+
+                <div v-if="createUserStep == 1" class="w-full h-full flex flex-col">
+                    <div class="w-full py-2 border-b pb-5 border-luk-200">
+                        <p class="  text-sn">We care about your privacy. <br> Give yourself a cool username so peaple can know ho they are talking with.</p>
+                        <p class=" text-sm  ">This name will be used as your handle on Hivy Space</p>
+                    </div>
+
+                    <div class="w-full h-full flex flex-col justify-center items-center">
+
+                        <div class="p-1 bg-luk-400 rounded-lg w-3/4 flex items-center">
+                          <p class="text-2xl text-luk-600">@</p>  <input v-model="loggedUser.username" type="text" placeholder="Enter your Username" class="font-bold w-full bg-transparent outline-none pl-0 p-2">
+                        </div>
+                        <p class="mb-4 mt-10 text-sm">Define your self in one line 😎</p>
+                        <div class=" relative p-5 bg-luk-400 rounded-lg w-3/4 flex items-center ">
+                            <textarea maxlength="150" resize="none" v-model="loggedUser.tagline" type="text" placeholder="Enter your tagline" class="  w-full bg-transparent outline-none pl-0 ">
+                            </textarea>
+                            <p class="absolute bottom-2 right-5 text-xs">{{(loggedUser.tagline??'').length}} of 150</p>
+                        </div>
+
+                        <!-- <Button class="w-2/5 mt-10 py-1 bg-opacity-50  py-5 border-2 dark:border-luk-600 border-luk-600" type="primary" label="Apply">
+                            <template #leftIcon>
+                                    <CheckIcon class="w-6 h-6"></CheckIcon>
+                            </template>
+                        </Button> -->
+                    </div>
+                </div>
+                
+
+                 <div class="flex w-full pt-5 justify-between">
+                  <div>
+                    <Button @click="()=>{createUserStep--;}" type="primary" label="Back">
+                        <template #rightIcon>
+                                <ArrowRightCircleIcon class="w-6 h-6 transform rotate-180"></ArrowRightCircleIcon>
+                        </template>
+                    </Button>
+                  </div>
+                   <div>
+                    <Button @click="()=>{createUserStep++;
+                    if(createUserStep>= maxSteps){
+                        showWelcome = false;
+                    }
+                    }" type="primary" label="Next">
+                        <template #rightIcon>
+                                <ArrowRightCircleIcon class="w-6 h-6"></ArrowRightCircleIcon>
+                        </template>
+                    </Button>
+                   </div>
+                 </div>
+                </div>
+            </template>
+        </Dialog>
             
 
         
@@ -120,23 +201,29 @@ onMounted(() => {
 <script lang="ts">
 
 import Dropdown from '../components/Dropdown.vue'
+import Dialog from '../components/Dialog.vue'
 import Button from '../components/Button.vue'
 import Checkbox from '../components/Checkbox.vue'
-import {ChevronDownIcon, CubeIcon, EyeIcon, PlusIcon, QueueListIcon, StarIcon} from "@heroicons/vue/24/solid"
+import {ChevronDownIcon, CubeIcon, EyeIcon, PlusIcon, QueueListIcon, StarIcon, ArrowRightCircleIcon, CheckIcon} from "@heroicons/vue/24/solid"
 
 import  axios from 'axios';
 
-import { IAnime, IAnimeResult } from '../types';
+import { IAnime, IAnimeResult, IUser } from '../types';
 import AnimeDetails from '../components/AnimeDetails.vue';
 import AnimeCard from '../components/AnimeCard.vue';
 import { inject } from 'vue';
 
+import {AvatarImages} from '../data/avatars'
 
 
 export default {
     data:function(){ 
 
         return new class {
+            createUserStep:number = 0;
+            maxSteps = 2;
+            showWelcome:boolean = false;
+            loggedUser:IUser = {};
             darkMode:boolean = true;
             animeThemes:Array<Object> =[
                 {label:"Manga"},
@@ -145,12 +232,15 @@ export default {
                 {label:"Comic"},
             ];
 
+            animeAvatars:Array<string>=AvatarImages;
+
             selectedAnime:IAnime = {};
             showDetails:boolean = false;
 
             animeData:IAnimeResult = {};
         }();
     },
+   
     props:{
         onThemeChanged:{
             type:Function
@@ -218,12 +308,39 @@ export default {
                 // always executed
             });   
         },
+        onLoginCallback: function (response:any) {
+
+            const userData = decodeCredential(response.credential)
+            this.loggedUser = userData;
+            this.showWelcome = true;
+            this.createUserStep = 0;
+            // //@ts-ignore
+            // window.user = userData;
+
+        }
 
        
     },
    
     mounted(){
         const ctx = this;
+
+
+
+
+
+    setTimeout(() => {
+            googleOneTap()
+            .then((response) => {
+                ctx.onLoginCallback(response)
+            })
+            .catch((error) => {
+                console.log("Handle the error", error)
+            })
+        
+    }, 500);
+
+
         ctx.getAnimeData({});
  
         const myDiv = document.getElementById('animePageList')  
@@ -256,7 +373,10 @@ export default {
     EyeIcon,
     StarIcon,
     AnimeDetails,
-    AnimeCard
+    AnimeCard,
+    Dialog,
+    ArrowRightCircleIcon,
+    CheckIcon
 }
    
     
