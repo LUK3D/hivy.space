@@ -200,6 +200,8 @@ export interface IUser {
     azp?:            string;
     name?:           string;
     username?:           string;
+    bio?:           string;
+    tagline?:           string;
     picture?:        string;
     given_name?:     string;
     family_name?:    string;
