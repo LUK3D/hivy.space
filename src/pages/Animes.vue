@@ -213,6 +213,7 @@ import AnimeDetails from '../components/AnimeDetails.vue';
 import AnimeCard from '../components/AnimeCard.vue';
 import { inject } from 'vue';
 
+import {AvatarImages} from '../data/avatars'
 
 
 export default {
@@ -231,41 +232,7 @@ export default {
                 {label:"Comic"},
             ];
 
-            animeAvatars:Array<string>=[
-                'https://avatarfiles.alphacoders.com/108/thumb-108886.gif',
-                'https://avatarfiles.alphacoders.com/715/thumb-71560.jpg',
-                'https://avatarfiles.alphacoders.com/752/thumb-75205.png',
-                'https://avatarfiles.alphacoders.com/260/thumb-260.jpg',
-                'https://avatarfiles.alphacoders.com/893/thumb-89303.gif',
-                'https://avatarfiles.alphacoders.com/896/thumb-89615.png',
-                'https://avatarfiles.alphacoders.com/827/thumb-82734.jpg',
-                'https://avatarfiles.alphacoders.com/161/thumb-161888.png',
-                'https://avatarfiles.alphacoders.com/321/thumb-32154.gif',
-                'https://avatarfiles.alphacoders.com/108/thumb-108839.gif',
-                'https://avatarfiles.alphacoders.com/967/thumb-96757.png',
-                'https://avatarfiles.alphacoders.com/849/thumb-84930.png',
-                'https://avatarfiles.alphacoders.com/320/thumb-32018.png',
-                'https://avatarfiles.alphacoders.com/106/thumb-10677.gif',
-                'https://avatarfiles.alphacoders.com/108/thumb-108672.gif',
-                'https://avatarfiles.alphacoders.com/970/thumb-97021.png',
-                'https://avatarfiles.alphacoders.com/905/thumb-90595.gif',
-                'https://avatarfiles.alphacoders.com/910/thumb-91042.gif',
-                'https://avatarfiles.alphacoders.com/477/thumb-47.jpg',
-                'https://avatarfiles.alphacoders.com/982/thumb-9825.jpg',
-                'https://avatarfiles.alphacoders.com/782/thumb-78200.png',
-                'https://avatarfiles.alphacoders.com/108/thumb-108917.png',
-                'https://avatarfiles.alphacoders.com/134/thumb-13472.gif',
-                'https://avatarfiles.alphacoders.com/152/thumb-152197.png',
-                'https://avatarfiles.alphacoders.com/162/thumb-162023.png',
-                'https://avatarfiles.alphacoders.com/907/thumb-90762.png',
-                'https://avatarfiles.alphacoders.com/837/thumb-83722.jpg',
-                'https://avatarfiles.alphacoders.com/837/thumb-83705.png',
-                'https://avatarfiles.alphacoders.com/174/thumb-174875.png',
-                'https://avatarfiles.alphacoders.com/123/thumb-123211.png',
-                'https://avatarfiles.alphacoders.com/946/thumb-94610.jpg',
-                'https://avatarfiles.alphacoders.com/969/thumb-96992.gif',
-                'https://avatarfiles.alphacoders.com/740/thumb-74085.png'
-            ];
+            animeAvatars:Array<string>=AvatarImages;
 
             selectedAnime:IAnime = {};
             showDetails:boolean = false;
